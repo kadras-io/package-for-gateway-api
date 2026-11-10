@@ -1,0 +1,6 @@
+---
+# Deleting the previous owner only deletes what it still owns: nothing.
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  - script: kapp delete -a previous-owner -n tests -y

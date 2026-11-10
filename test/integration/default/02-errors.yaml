@@ -1,0 +1,6 @@
+---
+# The admission policy is deleted with the package.
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: safe-upgrades.gateway.networking.k8s.io

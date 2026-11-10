@@ -1,0 +1,64 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: gateway-api.packages.kadras.io.0.0.0
+spec:
+  licenses:
+  - Apache 2.0
+  refName: gateway-api.packages.kadras.io
+  releaseNotes: https://github.com/kadras-io/package-for-gateway-api/releases
+  releasedAt: null
+  template:
+    spec:
+      deploy:
+      - kapp:
+          rawOptions:
+          - --dangerous-override-ownership-of-existing-resources=true
+      fetch:
+      - git: {}
+      template:
+      - ytt:
+          paths:
+          - config
+      - kbld: {}
+  valuesSchema:
+    openAPIv3: {}
+  version: 0.0.0
+
+---
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: gateway-api.packages.kadras.io
+spec:
+  categories:
+  - networking
+  displayName: gateway-api
+  longDescription: The Kubernetes Gateway API is a family of API kinds that provide
+    dynamic infrastructure provisioning and advanced traffic routing. This package
+    installs the Gateway API CustomResourceDefinitions shared by the implementations
+    in the cluster, like Envoy Gateway, and by the tools working with them, like cert-manager.
+  maintainers:
+  - name: Thomas Vitale
+  providerName: Kadras
+  shortDescription: The CustomResourceDefinitions of the Kubernetes Gateway API.
+  supportDescription: Go to https://kadras.io for documentation and https://github.com/kadras-io/package-for-gateway-api
+    for community support.
+
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  annotations:
+    kctrl.carvel.dev/local-fetch-0: .
+  name: gateway-api
+spec:
+  packageRef:
+    refName: gateway-api.packages.kadras.io
+    versionSelection:
+      constraints: 0.0.0
+  serviceAccountName: kadras-install-sa
+status:
+  conditions: null
+  friendlyDescription: ""
+  observedGeneration: 0

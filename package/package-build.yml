@@ -1,0 +1,26 @@
+apiVersion: kctrl.carvel.dev/v1alpha1
+kind: PackageBuild
+metadata:
+  name: gateway-api.packages.kadras.io
+spec:
+  release:
+  - resource: {}
+  template:
+    spec:
+      app:
+        spec:
+          deploy:
+          - kapp:
+              rawOptions:
+              - --dangerous-override-ownership-of-existing-resources=true
+          template:
+          - ytt:
+              paths:
+              - config
+          - kbld: {}
+      export:
+      - imgpkgBundle:
+          image: ghcr.io/kadras-io/package-for-gateway-api
+          useKbldImagesLock: true
+        includePaths:
+        - config

@@ -1,0 +1,6 @@
+---
+# Another app installs the same CustomResourceDefinitions, like the Envoy Gateway package did before relying on this package.
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  - script: kapp deploy -a previous-owner -n tests -y -f ../../../package/config/upstream/experimental-install.yaml

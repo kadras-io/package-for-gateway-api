@@ -1,0 +1,9 @@
+---
+# The package takes over the ownership of the existing resources.
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  - script: |
+      cd ../../../package && \
+      kubectl config set-context --current --namespace=tests && \
+      kctrl dev -f package-resources.yml --local -y

@@ -1,0 +1,30 @@
+#@ load("@ytt:overlay", "overlay")
+
+#! Deleting a CustomResourceDefinition deletes all its resources: uninstalling the package would delete all the Gateways
+#! and routes in the cluster, and the traffic they serve. Instead, uninstalling the package keeps the CustomResourceDefinitions.
+#! To remove them too, delete them explicitly (see docs/upgrade.md).
+#!
+#! The Gateway API resources might already exist, for example when they were installed by another package like Envoy Gateway,
+#! or by a previous installation of this package. They're adopted, and updated, rather than failing because they already exist.
+#! See: https://carvel.dev/kapp/docs/latest/apply/
+
+#@overlay/match by=overlay.subset({"kind":"CustomResourceDefinition"}), expects="1+"
+---
+metadata:
+  #@overlay/match missing_ok=True
+  annotations:
+    #@overlay/match missing_ok=True
+    kapp.k14s.io/delete-strategy: orphan
+    #@overlay/match missing_ok=True
+    kapp.k14s.io/create-strategy: fallback-on-update
+
+#! The `safe-upgrades` admission policy prevents installing experimental CustomResourceDefinitions on top of standard ones,
+#! and versions older than v1.5.0.
+
+#@overlay/match by=overlay.or_op(overlay.subset({"kind":"ValidatingAdmissionPolicy"}), overlay.subset({"kind":"ValidatingAdmissionPolicyBinding"})), expects=2
+---
+metadata:
+  #@overlay/match missing_ok=True
+  annotations:
+    #@overlay/match missing_ok=True
+    kapp.k14s.io/create-strategy: fallback-on-update
