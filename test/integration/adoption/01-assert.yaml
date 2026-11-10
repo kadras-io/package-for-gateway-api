@@ -3,6 +3,8 @@
 apiVersion: kuttl.dev/v1beta1
 kind: TestAssert
 commands:
+  # The previous owner doesn't own any resource anymore.
+  - script: test "$(kapp inspect -a previous-owner -n tests --json | jq '.Tables[0].Rows | length')" -eq 0
   - script: kubectl wait --for=condition=Established --timeout=60s crd/backendtlspolicies.gateway.networking.k8s.io crd/gatewayclasses.gateway.networking.k8s.io crd/gateways.gateway.networking.k8s.io crd/grpcroutes.gateway.networking.k8s.io crd/httproutes.gateway.networking.k8s.io crd/listenersets.gateway.networking.k8s.io crd/referencegrants.gateway.networking.k8s.io crd/tcproutes.gateway.networking.k8s.io crd/tlsroutes.gateway.networking.k8s.io crd/udproutes.gateway.networking.k8s.io crd/xbackends.gateway.networking.x-k8s.io crd/xbackendtrafficpolicies.gateway.networking.x-k8s.io crd/xmeshes.gateway.networking.x-k8s.io
 ---
 apiVersion: apiextensions.k8s.io/v1
