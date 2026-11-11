@@ -14,6 +14,7 @@ A Carvel package for the [Kubernetes Gateway API](https://gateway-api.sigs.k8s.i
 * **Safe upgrades**. The upstream `safe-upgrades` admission policy, which prevents installing experimental CustomResourceDefinitions on top of standard ones, and versions older than v1.5.0.
 * **Safe uninstall**. Uninstalling the package keeps the CustomResourceDefinitions, so that the Gateways and routes in the cluster, and the traffic they serve, aren't deleted with it.
 * **Single ownership**. Existing CustomResourceDefinitions, installed for example by a previous version of the Envoy Gateway package, are adopted by this package.
+* **Access**. The Kubernetes default roles are extended with the Gateway API resources: `edit` and `admin` manage the routes, the ReferenceGrants, and the BackendTLSPolicies of a namespace, while `view` reads them. The Gateways are read-only, since they're managed by the platform. See [docs/rbac.md](docs/rbac.md).
 
 ## 🚀&nbsp; Getting Started
 
@@ -91,6 +92,7 @@ kubectl api-resources --api-group=gateway.networking.x-k8s.io
 Documentation, tutorials and examples for this package are available in the [docs](docs) folder.
 For documentation specific to the Gateway API, check out [gateway-api.sigs.k8s.io](https://gateway-api.sigs.k8s.io).
 
+* [Access to the resources](docs/rbac.md)
 * [Upgrading and uninstalling](docs/upgrade.md)
 * [Verifying the release](docs/verify-release.md)
 

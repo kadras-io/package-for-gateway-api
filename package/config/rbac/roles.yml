@@ -1,0 +1,34 @@
+#! The permissions on the Gateway API resources, added to the Kubernetes default roles via aggregation, so that the
+#! users bound to `admin`, `edit`, or `view` in a namespace can use them there. `view` is included in `edit`,
+#! and `edit` in `admin`. The resources are listed explicitly, so that new ones are granted deliberately.
+#! See: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+
+#! The routes and the policies attached to them, which expose the applications of the namespace via the Gateways.
+#! The Gateways themselves are managed by the platform: creating one provisions dedicated proxies and load balancers.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gateway-api-edit
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["httproutes", "grpcroutes", "tcproutes", "tlsroutes", "udproutes", "referencegrants", "backendtlspolicies"]
+    verbs: ["create", "delete", "deletecollection", "patch", "update"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gateway-api-view
+  labels:
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules:
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["gateways", "httproutes", "grpcroutes", "tcproutes", "tlsroutes", "udproutes", "referencegrants", "backendtlspolicies", "listenersets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["gateway.networking.x-k8s.io"]
+    resources: ["xbackends", "xbackendtrafficpolicies"]
+    verbs: ["get", "list", "watch"]
